@@ -1,28 +1,30 @@
-const fs = require('fs')
+const http = require('http')
 
 
-/////////////////////////////////////////////////
-//// Reading and Writing Files Asynchronously///
-///////////////////////////////////////////////
+////////////////////////////////////
+///////////// Server //////////////
+//////////////////////////////////
 
-// Non-Blocking, Async Way
+// In order two build server we have to do two things
+// 1-Create Sever
+// 2-Start Sever
 
-// First Parameter is path of the file
-// Second parameter is a callback function (Node.JS is all built arounds callbacks in order to implement an async behavior)
-// fs.readFile('./txt/start.txt', 'utf-8', (err, data) => {
-//     console.log(data)
-// })
-fs.readFile('./txt/start.txt', 'utf-8', (err, data1) => {
-    if (err) return console.log("ERROR!")
-    fs.readFile(`./txt/${data1}.txt`, 'utf-8', (err, data2) => {
-        console.log(data2)
-        fs.readFile('./txt/append.txt', 'utf-8', (err, data3) => {
-            console.log(data3)
-            fs.writeFile('./txt/final.txt', `${data2}\n${data3}`, 'utf-8', err => {
-                console.log("Your file has been written")
-            })
-        })
-    })
+// Create a server will accept callback function, which will be fired of each time a new request hits our sever.
+// callback function get access to important & fundamental variable. It's request and response variable.
+
+// Request Object: which holds all kind of stuff, like the request url, and a bunch of other stuff
+// Response Object: Gives us a lot of tools basically for dealing with the response, so for sending out the response 
+
+//  First Part: Creating a Sever
+const server = http.createServer((req, res) => {
+    // console.log(req)
+    res.end("Hello Client from the Server")
 })
 
-console.log('Will Read File!')
+// Second Part: Listening incoming request from the client to the Sever
+// listen first parameter is port number.
+// second 
+// third optional parameter which a callback function, callback function run as soon as the server start listening 
+server.listen(8000, '127.0.0.1', () => {
+    console.log("Listening to request on port 8000");
+})
