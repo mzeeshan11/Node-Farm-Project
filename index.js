@@ -1,25 +1,28 @@
 const fs = require('fs')
-// Calling this function here with this build in FS module name ...
-// will then return an object in which there are a lot of functions that we can use.
 
-// We can do many amazing things with Node.JS that we cannot do with JavaScript in the browser. 
-// For example reading the file from the file system
 
-// In order to do that we need to use a node module. So Node.js is really build around this concept of modules ...
-// where all kind of additional functionality are stored in a module. In our above case, reading files, that is inside the FS module
+/////////////////////////////////////////////////
+//// Reading and Writing Files Asynchronously///
+///////////////////////////////////////////////
 
-// Use of FS module
-// In order to use FS module, we do require them into our code and then store the result of the requiring function in a variable
+// Non-Blocking, Async Way
 
-// Take two parameter
-// First one is the path to the file that we're reading and then also character encode 
-// Second one we have to define the character encoding, which is utf8
+// First Parameter is path of the file
+// Second parameter is a callback function (Node.JS is all built arounds callbacks in order to implement an async behavior)
+// fs.readFile('./txt/start.txt', 'utf-8', (err, data) => {
+//     console.log(data)
+// })
+fs.readFile('./txt/start.txt', 'utf-8', (err, data1) => {
+    if (err) return console.log("ERROR!")
+    fs.readFile(`./txt/${data1}.txt`, 'utf-8', (err, data2) => {
+        console.log(data2)
+        fs.readFile('./txt/append.txt', 'utf-8', (err, data3) => {
+            console.log(data3)
+            fs.writeFile('./txt/final.txt', `${data2}\n${data3}`, 'utf-8', err => {
+                console.log("Your file has been written")
+            })
+        })
+    })
+})
 
-const textIn = fs.readFileSync('./txt/input.txt', 'utf-8')
-console.log(textIn)
-
-// Writing text in a file
-const textOut = `This is what we Know about the avocado: ${textIn}.\nCreated on ${Date.now()}`
-fs.writeFileSync("./txt/output.txt", textOut)
-
-console.log("File Written!")
+console.log('Will Read File!')
