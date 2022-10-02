@@ -1,4 +1,5 @@
 const http = require('http')
+const url = require('url')
 
 
 ////////////////////////////////////
@@ -14,11 +15,29 @@ const http = require('http')
 
 // Request Object: which holds all kind of stuff, like the request url, and a bunch of other stuff
 // Response Object: Gives us a lot of tools basically for dealing with the response, so for sending out the response 
+// Routing: mean implementing different actions for different URLs.
 
 //  First Part: Creating a Sever
 const server = http.createServer((req, res) => {
+    console.log(req.url)
+    const pathName = req.url
+    if (pathName === '/' || pathName === '/overview') {
+        res.end("This is a Overview")
+    } else if (pathName === '/product') {
+        res.end("This is a Product Page")
+    } else {
+        // we can send something more in writeHead that's header => to specify header we need an object
+        // Header: http header basically piece of information about the response that we are sending back
+        res.writeHead(404, {
+            'Content-Type': 'text/html',
+            'my-own-header': 'hello-world'
+        })
+        res.end('<h1>Page not Found!</h1>')
+        // res.end("Page not Found!")
+    }
+
     // console.log(req)
-    res.end("Hello Client from the Server")
+    // res.end("Hello Client from the Server")
 })
 
 // Second Part: Listening incoming request from the client to the Sever
