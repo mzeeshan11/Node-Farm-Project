@@ -1,3 +1,4 @@
+const fs = require('fs')
 const http = require('http')
 const url = require('url')
 
@@ -17,6 +18,10 @@ const url = require('url')
 // Response Object: Gives us a lot of tools basically for dealing with the response, so for sending out the response 
 // Routing: mean implementing different actions for different URLs.
 
+// fs.readFile("./dev-data/data.json")
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8')
+const dataObject = JSON.parse(data)
+
 //  First Part: Creating a Sever
 const server = http.createServer((req, res) => {
     console.log(req.url)
@@ -25,6 +30,11 @@ const server = http.createServer((req, res) => {
         res.end("This is a Overview")
     } else if (pathName === '/product') {
         res.end("This is a Product Page")
+    } else if (pathName === '/api') {
+        // Scenario: want to read data from the JSON data file, then parson JSON to JS, and then send back to the client
+        res.writeHead(200, { 'Content-type': 'application.json' });
+        res.end(dataObject)
+
     } else {
         // we can send something more in writeHead that's header => to specify header we need an object
         // Header: http header basically piece of information about the response that we are sending back
