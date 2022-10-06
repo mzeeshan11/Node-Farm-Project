@@ -42,22 +42,25 @@ const dataObject = JSON.parse(data)
 //  First Part: Creating a Sever
 const server = http.createServer((req, res) => {
     console.log(req.url)
-    const pathName = req.url
+    const { query, pathname } = (url.parse(req.url, true))
 
     // Overview Page
-    if (pathName === '/' || pathName === '/overview') {
+    if (pathname === '/' || pathname === '/overview') {
         res.writeHead(200, { 'Content-type': 'text/html' })
         const cardHtml = dataObject.map(element => replaceTemplate(tempCard, element)).join('')
         const output = tempOverview.replace('{%PRODUCTNAME%}', cardHtml)
         res.end(output)
-        // res.end("This is a Overview")
 
         // Product Page
-    } else if (pathName === '/product') {
-        res.end("This is a Product Page")
+    } else if (pathname === '/product') {
+        res.writeHead(200, {'Content-type': 'text/html'})
+        const product = dataObject[query.id]
+        const output = replaceTemplate(tempProduct, product)
+        console.log(query)
+        res.end(output)
 
         // API  
-    } else if (pathName === '/api') {
+    } else if (pathname === '/api') {
         // Scenario: want to read data from the JSON data file, then parson JSON to JS, and then send back to the client
         res.writeHead(200, { 'Content-type': 'application.json' });
         res.end(dataObject)
